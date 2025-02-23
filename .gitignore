@@ -143,3 +143,4 @@ cython_debug/
 /allure-results
 /allure-report
 /reports/allure-reports
+/screenshots
