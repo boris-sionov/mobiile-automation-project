@@ -1,0 +1,5 @@
+[32mINFO    [0m App_Run_Test:ui_actions.py:126 Locator '('id', 'com.code2lead.kwad:id/Et4')' text is cleared
+[32mINFO    [0m App_Run_Test:ui_actions.py:126 Locator '('id', 'com.code2lead.kwad:id/Et5')' text is cleared
+[32mINFO    [0m App_Run_Test:ui_actions.py:114 Send text element with locator: '('id', 'com.code2lead.kwad:id/Et4')' and text send is: admin@gmail.com
+[32mINFO    [0m App_Run_Test:ui_actions.py:114 Send text element with locator: '('id', 'com.code2lead.kwad:id/Et5')' and text send is: admin123
+[32mINFO    [0m App_Run_Test:ui_actions.py:20 Clicked element with locator: '('id', 'com.code2lead.kwad:id/Btn3')'

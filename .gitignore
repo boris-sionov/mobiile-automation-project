@@ -57,6 +57,7 @@ cover/
 
 # Django stuff:
 *.log
+*.png
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -122,6 +123,9 @@ venv.bak/
 
 .idea/
 
+# macOS system files
+.DS_Store
+
 # mkdocs documentation
 /site
 
@@ -139,8 +143,4 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-/allure_results
-/allure-results
-/allure-report
-/reports/allure-reports
-/screenshots
+

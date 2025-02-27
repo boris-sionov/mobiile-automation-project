@@ -1,0 +1,7 @@
+[32mINFO    [0m App_Run_Test:conftest.py:16 Opening the tested application - Starting Automation tests
+[32mINFO    [0m App_Run_Test:ui_actions.py:20 Clicked element with locator: '('id', 'com.code2lead.kwad:id/Login')'
+[32mINFO    [0m App_Run_Test:ui_verifications.py:39 Text verification passed: 'Login Page' matches expected 'Login Page'.
+[32mINFO    [0m App_Run_Test:ui_actions.py:114 Send text element with locator: '('id', 'com.code2lead.kwad:id/Et4')' and text send is: mail@gmail.com
+[32mINFO    [0m App_Run_Test:ui_actions.py:114 Send text element with locator: '('id', 'com.code2lead.kwad:id/Et5')' and text send is: adb123
+[32mINFO    [0m App_Run_Test:ui_actions.py:20 Clicked element with locator: '('id', 'com.code2lead.kwad:id/Btn3')'
+[32mINFO    [0m App_Run_Test:ui_verifications.py:39 Text verification passed: 'Wrong Credentials' matches expected 'Wrong Credentials'.

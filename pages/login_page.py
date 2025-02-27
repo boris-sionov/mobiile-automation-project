@@ -40,6 +40,8 @@ class LoginPage(BasePage):
 
     def enter_correct_credentials(self, email, password):
         with allure.step(f"Enter {email} text to email text box"):
+            self.ui_actions.clear_text(self.enter_email_box)
+            self.ui_actions.clear_text(self.enter_psw_box)
             self.ui_actions.fill_in_text(self.enter_email_box, email)
             with allure.step(f"Enter {password} text to password text box"):
                 self.ui_actions.fill_in_text(self.enter_psw_box, password)

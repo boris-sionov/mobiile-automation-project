@@ -1,23 +1,13 @@
-import allure
-from allure_commons.types import AttachmentType
-from appium.webdriver.common.appiumby import AppiumBy
 from selenium.common import ElementNotVisibleException, ElementNotSelectableException, NoSuchElementException, \
     TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import utilities.custom_logger as CL
 import time
-import os
-import cv2
-import numpy as np
-from skimage.metrics import structural_similarity as ssim
 
 
 class BasePage:
     log = CL.custom_logger()
-    # allure_log = CL.allure_step_logs()
-    screenshot_directory = '.././screenshots/'
-    time_format = time.strftime("%d-%b-%Y %H:%M:%S")
 
     def __init__(self, driver):
         self.driver = driver

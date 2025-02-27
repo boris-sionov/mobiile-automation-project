@@ -7,6 +7,7 @@ from base.base_page import BasePage
 import cv2
 from skimage.metrics import structural_similarity as ssim
 from base.general_actions import GeneralActions
+from base.files_path import screenshot_directory
 
 
 class UIVerifications(BasePage):
@@ -37,7 +38,9 @@ class UIVerifications(BasePage):
             with allure.step(f"Text verification passed: '{actual_text}' matches expected '{expected_text}'."):
                 self.log.info(f"Text verification passed: '{actual_text}' matches expected '{expected_text}'.")
         else:
+            screenshot_path = screenshot_directory + self.general_actions.screenshot("Text_Verification_Fail")
             with allure.step(f"Text verification failed: Expected '{expected_text}', but got '{actual_text}'."):
+                allure.attach.file(screenshot_path, name="Text Verification Failure Screenshot", attachment_type=allure.attachment_type.PNG)
                 self.log.error(f"Text verification failed: Expected '{expected_text}', but got '{actual_text}'.")
             assert expected_text == actual_text, f"Expected text: '{expected_text}', but got: '{actual_text}'"
 
@@ -68,15 +71,19 @@ class UIVerifications(BasePage):
     def get_element_size(self, locator):
         element = self.wait_for_visible(locator)
         size = element.size
-        y = element.location['y']
         return size  # Return size for comparison
 
     def compare_image(self, locator):
         element = self.wait_for_visible(locator)
 
-        # Read the before image
+        # # Read the before image
         before_press = self.general_actions.screenshot("Before_test")
-        current_img = cv2.imread(self.screenshot_directory + before_press, cv2.IMREAD_UNCHANGED)
+        current_img = cv2.imread(screenshot_directory + before_press, cv2.IMREAD_UNCHANGED)
+
+        # Read the before image
+        # before_press = self.general_actions.screenshot("Before_test")
+        # before_img_path = screenshot_directory + before_press  # Correctly join the paths
+        # current_img = cv2.imread(before_img_path, cv2.IMREAD_UNCHANGED)
 
         # Convert the before image to grayscale
         gray1 = cv2.cvtColor(current_img, cv2.COLOR_BGR2GRAY)
@@ -87,7 +94,8 @@ class UIVerifications(BasePage):
 
         # Read the after image
         after_press = self.general_actions.screenshot("After_test")
-        after_img = cv2.imread(self.screenshot_directory + after_press, cv2.IMREAD_UNCHANGED)
+        # after_img_path = screenshot_directory + after_press
+        after_img = cv2.imread(screenshot_directory + after_press, cv2.IMREAD_UNCHANGED)
 
         # Convert the after image to grayscale
         gray2 = cv2.cvtColor(after_img, cv2.COLOR_BGR2GRAY)

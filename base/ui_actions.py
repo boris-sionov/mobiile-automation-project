@@ -74,11 +74,8 @@ class UIActions(BasePage):
         self.driver.execute_script("mobile: longClickGesture", {
             'x': x + width / 2,  # Center X coordinate
             'y': y + height / 2,  # Center Y coordinate
-            # 'element': locator,  # Reference element ID instead of the element itself
             'duration': duration,  # Click duration in milliseconds.
-            # 'radius': 20,  # Optional: Set the radius of the touch area
-            # 'fingerCount': 1,  # Optional: Number of fingers for the gesture
-            # 'speed': 1.0  # Optional: Gesture speed
+
         })
 
         with allure.step(f"Locator {locator} pressed with long click press duration is: {duration}."):
@@ -115,5 +112,17 @@ class UIActions(BasePage):
         except Exception as e:
             with allure.step(f"Unable sent text on element: {locator}, Exception: {e}"):
                 self.log.error(f"Unable sent text on element: {locator}, Exception: {e}")
+                self.general_actions.screenshot(locator)
+            assert False
+
+    def clear_text(self, locator):
+        try:
+            element = self.wait_for_visible(locator)
+            element.clear()
+            with allure.step(f"Locator '{locator}' text is cleared"):
+                self.log.info(f"Locator '{locator}' text is cleared")
+        except Exception as e:
+            with allure.step(f"Unable sent clear text on element: {locator}, Exception: {e}"):
+                self.log.error(f"Unable sent clear text on element: {locator}, Exception: {e}")
                 self.general_actions.screenshot(locator)
             assert False
