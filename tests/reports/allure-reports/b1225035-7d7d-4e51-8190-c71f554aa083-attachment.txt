@@ -1,8 +1,0 @@
-[32mINFO    [0m App_Run_Test:ui_verifications.py:63 Text from element with locator: Preview
-[32mINFO    [0m App_Run_Test:login_page.py:53 Before enter some text in the box and pressing and pressing submit text appears:  'Preview'
-[32mINFO    [0m App_Run_Test:ui_actions.py:114 Send text element with locator: '('class name', 'android.widget.EditText')' and text send is: some text to test
-[32mINFO    [0m App_Run_Test:ui_actions.py:20 Clicked element with locator: '('id', 'com.code2lead.kwad:id/Btn_admin_sub')'
-[32mINFO    [0m App_Run_Test:ui_verifications.py:63 Text from element with locator: some text to test
-[32mINFO    [0m App_Run_Test:login_page.py:60 After pressing submit text appears: 'some text to test'
-[32mINFO    [0m App_Run_Test:login_page.py:62 Text is changed from: 'Preview' to: 'some text to test'
-[32mINFO    [0m App_Run_Test:conftest.py:38 Killing the application - Tests are done
