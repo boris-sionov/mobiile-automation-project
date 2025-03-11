@@ -146,5 +146,7 @@ cython_debug/
 # reports
 reports/*
 
+# Add Automation_Project.iml to .gitignore
+Automation_Project.iml
 
 
