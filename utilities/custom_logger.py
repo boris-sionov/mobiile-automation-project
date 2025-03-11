@@ -12,7 +12,6 @@ from utilities.config import ConfigReader
 date_format = ConfigReader.read_config("date", "logs_time_format")
 
 
-
 def custom_logger():
     logger = logging.getLogger("App_Run_Test")
     logger.setLevel(logging.DEBUG)
