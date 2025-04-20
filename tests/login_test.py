@@ -10,7 +10,7 @@ from utilities.page_factory import PageFactory
 
 @allure.description("Login Page Test")
 @pytest.mark.usefixtures("setup_class")
-class TestLogin(PageFactory):
+class TestLogin():
 
     @allure.title("Test 01: This test is checking incorrect info filled in the credentials")
     @pytest.mark.run(order=1)

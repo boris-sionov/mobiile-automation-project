@@ -1,13 +1,12 @@
-import os
 import time
 
 import allure
-
-from base.base_page import BasePage
 import cv2
 from skimage.metrics import structural_similarity as ssim
-from base.general_actions import GeneralActions
+
+from base.base_page import BasePage
 from base.files_path import screenshot_directory
+from base.general_actions import GeneralActions
 
 
 class UIVerifications(BasePage):

@@ -29,21 +29,6 @@ class GeneralActions(BasePage):
         else:
             self.log.error(f"Screenshot folder does not exist: {screenshot_directory}")
 
-    # def clean_allure_folder(self):
-    #     # log = CL.custom_logger()
-    #
-    #     if os.path.exists(screenshot_directory):
-    #         try:
-    #             for file_name in os.listdir(allure_report_directory):
-    #                 file_path = os.path.join(allure_report_directory, file_name)
-    #                 if os.path.isfile(file_path):
-    #                     os.remove(file_path)
-    #             self.log.info("Cleaned old Allure-reports from the folder.")
-    #         except Exception as e:
-    #             self.log.error(f"Error while cleaning Allure-reports folder: {str(e)}")
-    #     else:
-    #         self.log.error(f"Allure-reports folder does not exist: {allure_report_directory}")
-
         # Take a screenshot
     def screenshot(self, screenshot_name):
 
@@ -57,3 +42,16 @@ class GeneralActions(BasePage):
             return file_name  # Return the file name
         except Exception as e:
             self.log.error(f"Unable to save screenshot to the Path: {screenshot_path}. Error: {str(e)}")
+
+    def switch_to_frame(self, index):
+        """
+        Wait until the iframe at the given index is available and switch to it.
+        :param index: Index of the iframe
+        """
+        try:
+            self.log.info(f"Waiting for iframe at index {index} to be available and switch to it.")
+            self.wait_for_frame(index)
+            self.log.info(f"Switched to iframe at index {index} successfully.")
+        except Exception as e:
+            self.log.error(f"Failed to switch to iframe({index}). Error: {str(e)}")
+            assert False, f"Failed to switch to iframe({index}). Error: {str(e)}"
