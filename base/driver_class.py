@@ -6,6 +6,7 @@ from selenium.common import WebDriverException
 import utilities.custom_logger as CL
 from base.browser_init import BrowserInit
 from utilities.config import ConfigReader
+from pathlib import Path
 
 # Initialize Logger
 log = CL.custom_logger()
@@ -45,9 +46,9 @@ class Driver:
         log.info("Starting driver initialization")
         platform = ConfigReader.read_config('general', 'platform')
         platform = platform.lower()
+        log.info(f"Running automation tests on {platform} platform")
 
         if platform == 'web':
-            log.info(f"Running automation tests on {platform} platform")
             # Get browser type from config
             browser_type = ConfigReader.read_config('web', 'browser')
             driver = get_browser(browser_type)
@@ -60,40 +61,59 @@ class Driver:
             return driver
 
         elif platform == 'android':
-            print(f"You choose to run automation on {platform}")
-            root_dir = sys.path[0]  # Convert root_dir to a Path object
+            root_dir = sys.path[0]  # Get project root directory
+
+            root_dir = Path(sys.path[0])
             relative_app_path = ConfigReader.read_config("capabilities", "app_path")
+            full_app_path = str(Path(root_dir) / relative_app_path)
+
             appium_server = ConfigReader.read_config("capabilities", "appium_server")
+
+            app_package = ConfigReader.read_config("capabilities", "app_package")
+            app_activity = ConfigReader.read_config("capabilities", "app_activity")
 
             desired_capabilities = \
                 {'platformName': ConfigReader.read_config("capabilities", "platform_name"),
                  'platformVersion': ConfigReader.read_config("capabilities", "platform_version"),
                  'automationName': ConfigReader.read_config("capabilities", "automation_name"),
                  'deviceName': ConfigReader.read_config("capabilities", "device_name"),
-                 'app': root_dir + '/' + relative_app_path,
-                 'appPackage': ConfigReader.read_config("capabilities", "app_package"),
-                 'appActivity': ConfigReader.read_config("capabilities", "app_activity")
+                 'app': full_app_path,
+                 # 'appPackage': ConfigReader.read_config("capabilities", "app_package"),
+                 # 'appActivity': ConfigReader.read_config("capabilities", "app_activity")
                  }
+
+            # Only add appPackage and appActivity if they are not empty
+            if app_package:
+                desired_capabilities['appPackage'] = app_package
+            if app_activity:
+                desired_capabilities['appActivity'] = app_activity
+
+            if app_package:
+                desired_capabilities['appPackage'] = app_package
+            if app_activity:
+                desired_capabilities['appActivity'] = app_activity
 
             try:
                 capabilities_options = UiAutomator2Options().load_capabilities(desired_capabilities)
                 driver = webdriver.Remote(appium_server, options=capabilities_options)
                 return driver
 
-            except urllib3.exceptions.MaxRetryError:  # Handling NewConnectionError specifically
-                log.critical(f"Connection error: Unable to connect to Appium server at {appium_server}. Ensure Appium "
-                             f"is running.")
-                sys.exit(1)  # Exit script on failure to connect
-            except WebDriverException as e:  # Handle other WebDriver exceptions
-                log.critical(f"Appium Error: {str(e)}. Ensure a device is connected and Appium is running.")
-                sys.exit(1)  # Exit script on failure
-            except Exception as e:  # Catch any other unexpected errors
-                log.critical(f"Unexpected error: {str(e)}")
-                sys.exit(1)  # Exit script on any unexpected error
+            except urllib3.exceptions.MaxRetryError:
+                Driver.exit_with_error(
+                    f"Connection error: Unable to connect to Appium server at {appium_server}. Ensure Appium is running.")
+            except WebDriverException as e:
+                Driver.exit_with_error(f"Appium Error: {str(e)}. Ensure a device is connected and Appium is running.")
+            except Exception as e:
+                Driver.exit_with_error(f"Unexpected error: {str(e)}")
 
         elif platform == 'ios':
-            log.info("Running automation on iOS device")
+            # iOS setup (to be implemented)
+            pass
 
         else:
-            log.critical(f"Invalid platform '{platform}'. Please specify 'web' or 'android' in config.")
-            sys.exit(1)
+            Driver.exit_with_error(f"Invalid platform '{platform}'. Please specify 'web' or 'android' in config.")
+
+    @staticmethod
+    def exit_with_error(message):
+        log.critical(message)
+        sys.exit(1)

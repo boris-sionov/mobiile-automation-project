@@ -1,84 +1,136 @@
-import time
-import unittest
-
 import allure
 import pytest
-import utilities.custom_logger as CL
 from utilities.page_factory import PageFactory
-import keyring
 
 
-@allure.description("All Pages Test")
-@pytest.mark.usefixtures("setup_class")
+@allure.description("All Pages Test - Open all pages and verify correct page is opened")
+@pytest.mark.usefixtures("setup_function")
 class TestAllPages(PageFactory):
-    @allure.title("Test 01: This test is checking that all pages opened and verify correct title of each page")
-    def test_all_pages(self):
-        # CL.allure_step_logs("Step 1: Open Enter some value page")
-        with allure.step("Step 1: Open Enter some value page"):
-            self.main_page.open_enter_some_value_page('Enter some Value')
-        time.sleep(1)
-        self.driver.back()
+    @allure.title("Test 01: Open 'Enter Some Value' page and verify correct title")
+    def test01_enter_some_value(self):
+        with allure.step("Step 1: Open 'Enter Some Value' page"):
+            self.main_page.open_page('enter some value button')
 
-        with allure.step("Step 2: Open Contact us page form page"):
-            self.main_page.open_contact_us_page('Contact Us form')
-        time.sleep(1)
-        self.driver.back()
+        with allure.step("Step 2: Verify the page title is correct"):
+            self.main_page.verify_page_title('enter some value title', 'Enter some Value')
 
-        with allure.step("Step 3: Open Scroll View page"):
-            self.main_page.open_scroll_view_page('ScrollView')
-        time.sleep(1)
-        self.driver.back()
+        with allure.step("Step 3: Navigate back to main page"):
+            self.main_page.press_on_back()
 
-        with allure.step("Step 4: Open Tab activity page"):
-            self.main_page.open_tab_view_page('Tab View')
-        time.sleep(1)
-        self.driver.back()
+    @allure.title("Test 02: Open 'Contact us' page and verify correct title")
+    def test02_contact_us(self):
+        with allure.step("Step 1: Open Contact us page form page"):
+            self.main_page.open_page('contact us button')
 
-        with allure.step("Step 5: Open Zoom page"):
-            self.main_page.open_zoom_page()
+        with allure.step("Step 2: Verify the page title is correct"):
+            self.main_page.verify_page_title('contact us title', 'Contact Us form')
 
-        with allure.step("Step 6: Open Login page"):
-            self.main_page.open_login_page('Login Page')
-        time.sleep(1)
-        self.driver.back()
+        with allure.step("Step 3: Navigate back to main page"):
+            self.main_page.press_on_back()
 
-        with allure.step("Step 7: Open Long click page"):
-            self.main_page.open_long_click_page('Get your password')
+    @allure.title("Test 03: Open 'Scroll View' page and verify correct title")
+    def test03_scroll_view(self):
+        with allure.step("Step 1: Open Scroll View page"):
+            self.main_page.open_page('scroll view button')
 
-        with allure.step("Step 8: Open Time page"):
-            self.main_page.open_time_page('Time Activity')
-        time.sleep(1)
-        self.driver.back()
+        with allure.step("Step 2: Verify the page title is correct"):
+            self.main_page.verify_page_title('scroll view title', 'ScrollView')
 
-        with allure.step("Step 9: Open Date page"):
-            self.main_page.open_date_page("Date Activity")
-        time.sleep(2)
-        self.driver.back()
+        with allure.step("Step 3: Navigate back to main page"):
+            self.main_page.press_on_back()
 
-        with allure.step("Step 10: Open Hybrid page"):
-            self.main_page.open_hybrid_page("Hybrid Activity")
-        time.sleep(2)
-        self.driver.back()
+    @allure.title("Test 04: Open 'Tab Activity' page and verify correct title")
+    def test04_tab_activity(self):
+        with allure.step("Step 1: Open Tab Activity page"):
+            self.main_page.open_page('tab activity button')
 
-        with allure.step("Step 11: Open Pinch in out page"):
-            self.main_page.open_pinch_in_out_page('com.code2lead.kwad:id/imageView')
-        time.sleep(1)
-        self.driver.back()
+        with allure.step("Step 2: Verify the page title is correct"):
+            self.main_page.verify_page_title('tab view title', 'Tab View')
 
-        with allure.step("Step 12: Open Drag and drop page"):
-            self.main_page.open_drag_and_drop_page("Draggable Text")
-        time.sleep(2)
-        self.driver.back()
+        with allure.step("Step 3: Navigate back to main page"):
+            self.main_page.press_on_back()
 
-        with allure.step("Step 13: Open Crash page"):
-            self.main_page.open_crash_page()
+    @allure.title("Test 05: Test zoom on KLO button")
+    def test05_zoom(self):
+        with allure.step("Step 1: Press on KLO to zoom it and verify zoom changed"):
+            self.main_page.verify_zoom('zoom button')
 
-        # CL.allure_step_logs("Step 14: Open Auto Suggestion page")
-        # self.mainPage.auto_suggestion_btn("Hybrid Activity")
-        # time.sleep(2)
-        # self.driver.back()
+    @allure.title("Test 06: Open 'Login' page and verify correct title")
+    def test06_login(self):
+        with allure.step("Step 1: Open Login page"):
+            self.main_page.open_page('login button')
 
+        with allure.step("Step 2: Verify the page title is correct"):
+            self.main_page.verify_page_title('login title', 'Login Page')
 
+        with allure.step("Step 3: Navigate back to main page"):
+            self.main_page.press_on_back()
 
+    @allure.title("Test 07: Open 'Long Click' page and verify correct title")
+    def test07_long_click(self):
+        with allure.step("Step 1: Open Login page"):
+            self.main_page.open_page('long click button')
 
+        with allure.step("Step 2: Click on cancel button"):
+            self.main_page.click_on_button("cancel button")
+
+    @allure.title("Test 08: Open 'Time' page and verify correct title")
+    def test08_time(self):
+        with allure.step("Step 1: Open Time page"):
+            self.main_page.open_page('time button')
+
+        with allure.step("Step 2: Verify the page title is correct"):
+            self.main_page.verify_page_title('time activity title', 'Time Activity')
+
+        with allure.step("Step 3: Navigate back to main page"):
+            self.main_page.press_on_back()
+
+    @allure.title("Test 09: Open 'Date' page and verify correct title")
+    def test09_date(self):
+        with allure.step("Step 1: Open Date page"):
+            self.main_page.open_page('date button')
+
+        with allure.step("Step 2: Verify the page title is correct"):
+            self.main_page.verify_page_title('date activity title', 'Date Activity')
+
+        with allure.step("Step 3: Navigate back to main page"):
+            self.main_page.press_on_back()
+
+    @allure.title("Test 10: Open 'Hybrid' page and verify correct title")
+    def test10_hybrid(self):
+        with allure.step("Step 1: Open Hybrid page"):
+            self.main_page.open_page('hybrid button')
+
+        with allure.step("Step 2: Verify the page title is correct"):
+            self.main_page.verify_page_title('hybrid activity title', 'Hybrid Activity')
+
+        with allure.step("Step 3: Navigate back to main page"):
+            self.main_page.press_on_back()
+
+    @allure.title("Test 11: Open 'Pinch' and verify image appears")
+    def test11_pinch(self):
+        with allure.step("Step 1: Open pinch page"):
+            self.main_page.open_page('pinch button')
+
+        with allure.step("Step 2: Verify Android Image appears"):
+            self.main_page.verify_image('android image')
+
+        with allure.step("Step 3: Navigate back to main page"):
+            self.main_page.press_on_back()
+
+    @allure.title("Test 12: Open 'Drag and drop' and verify correct title")
+    def test12_pinch(self):
+        with allure.step("Step 1: Open pinch page"):
+            self.main_page.open_page('drag and drop button')
+
+        with allure.step("Step 2: Verify the page title is correct"):
+            self.main_page.verify_page_title('draggable text', 'Draggable Text')
+
+        with allure.step("Step 3: Navigate back to main page"):
+            self.main_page.press_on_back()
+
+    @allure.title("Test 13: Test crash")
+    def test12_pinch(self):
+        with allure.step("Step 1: Verify app crashed"):
+            self.main_page.verify_app_crash('crash button', 'com.code2lead.kwad')
 

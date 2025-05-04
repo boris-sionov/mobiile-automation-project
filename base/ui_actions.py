@@ -1,9 +1,4 @@
 import time
-import imaplib
-import email
-import re
-
-from email.utils import parsedate_to_datetime
 
 import allure
 from selenium.common import NoSuchElementException
@@ -36,44 +31,6 @@ class UIActions(BasePage):
                 self.log.error(f"Error while getting element: {locator}. Exception: {e}")
             # self.general_actions.screenshot(locator)
             assert False
-
-    def press_with_scroll(self, locator, max_attempts=5):
-        attempts = 0
-        while attempts < max_attempts:
-
-            try:
-                element = self.driver.find_element(*locator)
-                boolean_value = element.get_attribute('long-clickable') == 'true'
-                if element.is_displayed():
-                    with allure.step(f"Element {locator} found on attempt without scrolling. Clicking on it."):
-                        self.log.info(f"Element {locator} found on attempt without scrolling. Clicking on it.")
-                    if boolean_value:
-                        self.long_press(locator)
-                        return  # Exit function after clicking the element
-                    else:
-                        element.click()
-                        with allure.step(f"Clicked element with locator: {locator}"):
-                            self.log.info(f"Clicked element with locator: {locator}")
-                        return  # Exit function after clicking the element
-
-            except NoSuchElementException:
-                with allure.step(f"Element {locator} not found on attempt {attempts + 1}. Trying to scroll."):
-                    self.log.warning(f"Element {locator} not found on attempt {attempts + 1}. Trying to scroll.")
-
-            # Perform scrolling if element is not found
-            self.driver.execute_script("mobile: scrollGesture", {
-                'left': 100,
-                'top': 800,
-                'width': 400,
-                'height': 800,
-                'direction': 'down',
-                'percent': 1.0
-            })
-
-            attempts += 1
-
-        # If element is not found after max_attempts, raise an exception
-        raise Exception(f"Element {locator} not found after {max_attempts} attempts.")
 
     def long_press(self, locator):
         # Get element button coordination
@@ -158,100 +115,38 @@ class UIActions(BasePage):
         drop_down.select_by_value(value)
         self.log.info(f"Select from dropdown list {value} in locator : {locator}")
 
-    def retrieve_otp_code(self, timeout=60, poll_interval=5):
-        # GMX IMAP Settings
-        start_time = time.time()
-        imap_server = "imap.gmx.com"
-        email_address = "boris.freetv@gmx.com"  # Replace with your GMX email
-        password = "Israel23-02"  # Replace with your GMX password
+    def press_auto(self, locator, try_scroll=True, max_attempts=5):
+        attempts = 0
 
-        # Start timing to check how long we've been waiting for the OTP
-
-        self.log.info("Connecting to GMX IMAP server...")
-
-        try:
-            # Connect to GMX IMAP server using secure SSL
-            mail = imaplib.IMAP4_SSL(imap_server)
-            mail.login(email_address, password)  # Login to the mail server
-            mail.select("inbox")  # Select the inbox folder to check for new emails
-            self.log.info("Connected to GMX email account and inbox selected.")
-        except Exception as e:
-            # Handle connection or login failures
-            self.log.error(f"Failed to connect/login: {e}")
-            assert False, f"Failed to connect/login to GMX IMAP server: {e}"  # Assert failure
-
-        self.otp_code = None  # Initialize OTP variable
-
-        # Loop to check the inbox for emails within the timeout duration
-        while time.time() - start_time < timeout:
+        while attempts < max_attempts:
             try:
-                # Search for all unread emails in the inbox
-                status, messages = mail.search(None, "(UNSEEN)")  # Only unread emails
-                email_ids = messages[0].split()
+                element = self.driver.find_element(*locator)
+                long_clickable = element.get_attribute('long-clickable') == 'true'
 
-                if not email_ids:
-                    # If no unread emails found, retry after waiting for the poll_interval duration
-                    self.log.info("No new emails yet. Retrying...")
-                    time.sleep(poll_interval)
-                    continue
+                if element.is_displayed():
+                    if long_clickable:
+                        self.long_press(locator)
+                    else:
+                        element.click()
+                        with allure.step(f"Clicked element with locator: {locator}"):
+                            self.log.info(f"Clicked element with locator: {locator}")
+                    return
 
-                # Process the latest unread email
-                latest_email_id = email_ids[-1]  # Get the latest unread email ID
-                status, msg_data = mail.fetch(latest_email_id, "(RFC822)")  # Fetch the email data
+            except Exception:
+                pass
 
-                for response_part in msg_data:
-                    if isinstance(response_part, tuple):
-                        msg = email.message_from_bytes(response_part[1])  # Parse the email message
+            if try_scroll:
+                with allure.step(f"Attempt {attempts + 1}: Scrolling to find {locator}"):
+                    self.log.warning(f"Element {locator} not visible. Attempt {attempts + 1}. Scrolling...")
+                self.driver.execute_script("mobile: scrollGesture", {
+                    'left': 100,
+                    'top': 800,
+                    'width': 400,
+                    'height': 800,
+                    'direction': 'down',
+                    'percent': 1.0
+                })
 
-                        # Get the 'Date' header and convert it to a datetime object
-                        email_date = msg.get("Date")
-                        email_datetime = parsedate_to_datetime(email_date)
+            attempts += 1
 
-                        # Only process emails received after the test started
-                        if email_datetime.timestamp() < start_time:
-                            continue  # Skip this email if it was received before the test started
-
-                        body = ""
-                        # If the email has multiple parts, extract the text/plain part
-                        if msg.is_multipart():
-                            for part in msg.walk():
-                                if part.get_content_type() == "text/plain":  # Get plain text part
-                                    body = part.get_payload(decode=True).decode()
-                                    break
-                        else:
-                            body = msg.get_payload(decode=True).decode()  # For non-multipart emails
-
-                        # Use regex to find the OTP in the email body
-                        otp_match = re.search(r"קוד האימות שלך.*?([\d]+)", body)
-                        if otp_match:
-                            # If OTP found, extract and log it
-                            self.otp_code = otp_match.group(1)
-                            self.log.info(f"OTP successfully retrieved: {self.otp_code}")
-
-                            # After extracting OTP, delete the email
-                            mail.store(latest_email_id, '+FLAGS', '\\Deleted')  # Mark the email for deletion
-                            mail.expunge()  # Permanently remove the email
-                            self.log.info("OTP email deleted from inbox.")
-                            break  # Exit the loop after processing the OTP
-            except Exception as e:
-                # Log any errors that occur while fetching or processing emails
-                self.log.error(f"Error while reading email: {e}")
-
-            # If OTP is found, break the loop
-            if self.otp_code:
-                break
-            else:
-                # Wait for the next poll interval before checking again
-                time.sleep(poll_interval)
-
-        # Logout and close the connection to the mail server
-        mail.logout()
-
-        # If OTP is not found, log the error and terminate the script
-        if not self.otp_code:
-            self.log.error("OTP email not received within timeout.")
-            assert False, "OTP email not received within timeout."  # Assert failure if OTP is not received
-
-        # Return the OTP if found, else exit the script
-        return self.otp_code
-
+        raise Exception(f"Element {locator} not found or not clickable after {max_attempts} attempts.")
