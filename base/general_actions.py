@@ -4,7 +4,7 @@ import time
 import utilities.custom_logger as CL
 from base.base_page import BasePage
 from base.files_path import screenshot_directory
-from utilities.config import ConfigReader
+from configuration.config import ConfigReader
 
 
 class GeneralActions(BasePage):

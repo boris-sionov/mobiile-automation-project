@@ -5,7 +5,7 @@ from appium import webdriver
 from selenium.common import WebDriverException
 import utilities.custom_logger as CL
 from base.browser_init import BrowserInit
-from utilities.config import ConfigReader
+from configuration.config import ConfigReader
 from pathlib import Path
 
 # Initialize Logger

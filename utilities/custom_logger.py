@@ -6,7 +6,7 @@ import allure
 import shutil
 import colorlog
 from base.files_path import log_file_path, allure_report_directory
-from utilities.config import ConfigReader
+from configuration.config import ConfigReader
 
 # Define date format
 date_format = ConfigReader.read_config("date", "logs_time_format")
