@@ -11,8 +11,10 @@ class TestContactUsPage(PageFactory):
 
     @allure.title("Test 01: Open Contact us page")
     def test_open_contact_us_page(self):
-        CL.allure_step_logs("Step 1: Open contact us page")
-        self.main_page.open_contact_us_page('Contact Us form')
+        with allure.step("Step 1: Open Contact us page form page"):
+            self.main_page.open_page('contact us button')
+        with allure.step("Step 2: Verify the page title is correct"):
+            self.main_page.verify_page_title('contact us title', 'Contact Us form')
 
     @allure.title("Test 02: Fill in form with details")
     def test_fill_info_form(self):

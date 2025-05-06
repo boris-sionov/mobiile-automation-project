@@ -33,7 +33,6 @@ class MainPage(BasePage):
                 'submit button': self.get_by_locator(LocatorType.ID, 'android:id/button1'),
                 'cancel button': self.get_by_locator(LocatorType.ID, 'android:id/button2'),
 
-                # Add other buttons as needed...
             },
             'text': {
                 'appium demo title': self.get_by_locator(LocatorType.TEXT, 'Appium Demo'),
@@ -49,7 +48,6 @@ class MainPage(BasePage):
                 'get your password title': self.get_by_locator(LocatorType.ID, 'android:id/alertTitle'),
                 'draggable text': self.get_by_locator(LocatorType.ID, 'lbl'),
 
-                # Add other text elements as needed...
             },
 
             'images': {
@@ -71,7 +69,7 @@ class MainPage(BasePage):
             self.ui_verifications.verify_text_in_element(title_locator, expected_title)
 
     def verify_zoom(self, page_name):
-        """Verify if image is get bigger when pressing on zoom button."""
+        """Verify that the image enlarges after pressing the zoom button."""
         with allure.step(f"Verify image zoomed after pressing on {page_name}"):
             button_locator = self.validate_locator_key(self.locators['buttons'], page_name)
             self.ui_verifications.compare_image(button_locator)
@@ -86,7 +84,6 @@ class MainPage(BasePage):
         """Go back with device back button."""
         with allure.step(f"Pressing on: back button"):
             self.driver.back()
-            time.sleep(1)
 
     def verify_image(self, image):
         """Verify image appears on the screen."""

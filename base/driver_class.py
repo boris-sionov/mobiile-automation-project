@@ -62,8 +62,6 @@ class Driver:
 
         elif platform == 'android':
             root_dir = sys.path[0]  # Get project root directory
-
-            root_dir = Path(sys.path[0])
             relative_app_path = ConfigReader.read_config("capabilities", "app_path")
             full_app_path = str(Path(root_dir) / relative_app_path)
 
@@ -113,6 +111,7 @@ class Driver:
         else:
             Driver.exit_with_error(f"Invalid platform '{platform}'. Please specify 'web' or 'android' in config.")
 
+    # Use this for kill any progress in case critical error
     @staticmethod
     def exit_with_error(message):
         log.critical(message)

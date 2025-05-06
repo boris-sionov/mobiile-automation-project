@@ -3,6 +3,7 @@ import subprocess
 # Define your tests in the order you want
 tests_in_order = [
     "tests/open_all_pages_test.py",
+    "tests/enter_some_value_test.py",
     "tests/contact_us_form_test.py",
     "tests/login_test.py",
 ]

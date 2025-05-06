@@ -1,9 +1,6 @@
 import pytest
 import time
 
-from pages.contact_us_form_page import ContactForm
-from pages.login_page import LoginPage
-from pages.main_page import MainPage
 from utilities.page_factory import PageFactory
 from base.driver_class import Driver
 import utilities.custom_logger as CL

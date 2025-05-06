@@ -6,6 +6,7 @@ from appium.webdriver.common.appiumby import AppiumBy
 from base.base_page import BasePage
 from base.ui_actions import UIActions
 from base.ui_verifications import UIVerifications
+from utilities.locator_type import LocatorType
 
 
 class LoginPage(BasePage):
@@ -14,6 +15,12 @@ class LoginPage(BasePage):
         super().__init__(driver)
         self.ui_actions = UIActions(driver)
         self.ui_verifications = UIVerifications(driver)
+        self.locators = {
+            'buttons': {
+                'submit button': self.get_by_locator(LocatorType.ID, 'Btn1'),
+            }
+        }
+
     # Buttons
     login_btn = (AppiumBy.ID, 'com.code2lead.kwad:id/Btn3')  # Locate element by id
 
