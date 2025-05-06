@@ -148,6 +148,5 @@ reports/*
 
 # Add Automation_Project.iml to .gitignore
 Automation_Project.iml
-configuration/config.ini
 
 
