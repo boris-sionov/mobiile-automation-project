@@ -59,7 +59,7 @@ class BasePage:
         elif by_type == 'text':
             return AppiumBy.ANDROID_UIAUTOMATOR, f'new UiSelector().text("{value}")'
         elif by_type == "xpath":
-            return AppiumBy.XPATH, value
+            return AppiumBy.XPATH, f'//android.widget.EditText[@resource-id="{value}"]'
         elif by_type == "class_name":
             return AppiumBy.CLASS_NAME, value
         elif by_type == "accessibility_id":
