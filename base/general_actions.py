@@ -1,3 +1,4 @@
+import inspect
 import os
 import time
 
@@ -42,6 +43,19 @@ class GeneralActions(BasePage):
             return file_name  # Return the file name
         except Exception as e:
             self.log.error(f"Unable to save screenshot to the Path: {screenshot_path}. Error: {str(e)}")
+
+    def generate_screenshot_name(self, suffix: str) -> str:
+        # Get current test method name from the stack
+        for frame_record in inspect.stack():
+            if frame_record.function.startswith("test"):
+                test_name = frame_record.function
+                break
+        else:
+            test_name = "unknown_test"
+
+        # Build file name
+        file_name = f"{test_name}_{suffix}.png"
+        return file_name
 
     def switch_to_frame(self, index):
         """

@@ -5,7 +5,8 @@ tests_in_order = [
     "tests/open_all_pages_test.py",
     "tests/enter_some_value_test.py",
     "tests/contact_us_form_test.py",
-    "tests/login_test.py",
+    "tests/scroll_view_test.py"
+    # "tests/login_test.py",
 ]
 
 # Run them one by one

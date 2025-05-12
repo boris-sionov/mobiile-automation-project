@@ -2,6 +2,7 @@ import time
 
 import allure
 import cv2
+from selenium.common import TimeoutException, NoSuchElementException
 from skimage.metrics import structural_similarity as ssim
 
 from base.base_page import BasePage
@@ -27,6 +28,23 @@ class UIVerifications(BasePage):
             self.log.error(f"Element is not found: {locator}, Exception: {e}")
             self.general_actions.screenshot(locator)
             return False
+
+    def is_element_not_displayed(self, locator):
+        try:
+            self.wait_for_not_visible(locator)
+            self.log.info(f"Confirmed element {locator} is not displayed.")
+            return True
+        except (TimeoutException, NoSuchElementException):
+            self.log.error(f"Element {locator} is still visible after timeout.")
+
+            # Generate file name
+            file_name = self.general_actions.generate_screenshot_name("element_not_displayed")
+
+            # Take screenshot with generated name
+            self.general_actions.screenshot(file_name)
+
+            # Fail the test
+            assert False, f"Element {locator} is still displayed after timeout!"
 
     # Method to assert text
     def verify_text_in_element(self, locator, expected_text):

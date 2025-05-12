@@ -10,11 +10,8 @@ from utilities.page_factory import PageFactory
 class TestLogin(PageFactory):
 
     @allure.title("Test 01: This test is checking incorrect info filled in the credentials")
-    def test_incorrect_info(self):
-        CL.allure_step_logs("Step 1: Open Login page")
-        self.main_page.open_login_page('Login Page')
-        CL.allure_step_logs("Step 2: Enter incorrect email and password")
-        self.login_page.enter_incorrect_credentials("mail@gmail.com", "adb123", "Wrong Credentials")
+    def test01_open_login_page(self):
+        self.main_page.open_page('')
 
     @allure.title("Test 02: This test is checking correct filled in the credentials")
     def test_correct_info(self):

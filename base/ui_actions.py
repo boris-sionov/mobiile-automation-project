@@ -1,7 +1,6 @@
 import time
 
 import allure
-from selenium.common import NoSuchElementException
 from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.support.select import Select
 

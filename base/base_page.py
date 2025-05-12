@@ -36,6 +36,15 @@ class BasePage:
             self.log.error(f"Failed to find visible element: {locator} | Exception: {e}")
             raise TimeoutException(f"Element not visible or not found: {locator}")
 
+    def wait_for_not_visible(self, locator):
+        self.log.info(f"Verifying if {locator} is not visible")
+        try:
+            return self.wait.until_not(EC.visibility_of_element_located(locator))
+        except Exception as e:
+            print(self.wait.until_not(EC.visibility_of_element_located(locator)))
+            self.log.warning(f"Element {locator} is still visible , Exception: {e}")
+            return False
+
     def wait_for_frame(self, index):
         try:
             return self.wait.until(EC.frame_to_be_available_and_switch_to_it(index))
