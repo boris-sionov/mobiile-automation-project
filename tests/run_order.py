@@ -1,14 +1,23 @@
 import subprocess
+import logging
+import os
 
-# Define your tests in the order you want
+# Optional: ensure the allure report directory exists or is cleaned
+allure_dir = "reports/allure-reports"
+os.makedirs(allure_dir, exist_ok=True)
+
 tests_in_order = [
     "tests/open_all_pages_test.py",
     "tests/enter_some_value_test.py",
     "tests/contact_us_form_test.py",
     "tests/scroll_view_test.py"
-    # "tests/login_test.py",
 ]
 
-# Run them one by one
-for test_file in tests_in_order:
-    subprocess.run(["pytest", test_file])
+# Run all tests in one pytest call
+subprocess.run([
+    "pytest",
+    *tests_in_order,
+    "-s", "-v",
+    f"--alluredir={allure_dir}",
+    "--capture=no"
+])

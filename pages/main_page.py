@@ -1,5 +1,3 @@
-import time
-
 import allure
 
 from base.base_page import BasePage
@@ -9,11 +7,14 @@ from utilities.locator_type import LocatorType
 
 
 class MainPage(BasePage):
+    """Main page object containing UI actions and verifications for buttons, texts, and images."""
 
     def __init__(self, driver):
+        """Initialize MainPage with driver and setup locators."""
         super().__init__(driver)
         self.ui_actions = UIActions(driver)
         self.ui_verifications = UIVerifications(driver)
+
         self.locators = {
             'buttons': {
                 'enter some value button': self.get_by_locator(LocatorType.ID, 'EnterValue'),
@@ -32,7 +33,6 @@ class MainPage(BasePage):
                 'auto suggestion button': self.get_by_locator(LocatorType.ID, 'autocomlete'),
                 'submit button': self.get_by_locator(LocatorType.ID, 'android:id/button1'),
                 'cancel button': self.get_by_locator(LocatorType.ID, 'android:id/button2'),
-
             },
             'text': {
                 'appium demo title': self.get_by_locator(LocatorType.TEXT, 'Appium Demo'),
@@ -47,50 +47,49 @@ class MainPage(BasePage):
                 'email text': self.get_by_locator(LocatorType.TEXT, 'Email'),
                 'get your password title': self.get_by_locator(LocatorType.ID, 'android:id/alertTitle'),
                 'draggable text': self.get_by_locator(LocatorType.ID, 'lbl'),
-
             },
-
             'images': {
                 'android image': self.get_by_locator(LocatorType.ID, 'imageView'),
             }
         }
 
+    @allure.step("Opening page: {page_name}")
     def open_page(self, page_name):
-        """Open desired page."""
-        page_name = page_name.lower()
-        with allure.step(f"Open page: {page_name}"):
-            button_locator = self.validate_locator_key(self.locators['buttons'], page_name)
-            self.ui_actions.press_auto(button_locator)
+        """Open the page by clicking the button associated with page_name."""
+        button_locator = self.get_page_locator('buttons', page_name)
+        self.ui_actions.press(button_locator)
 
+    @allure.step("Verifying title '{expected_title}' for page element: {page_title}")
     def verify_page_title(self, page_title, expected_title):
-        """Verify the page title text matches the expected value."""
-        with allure.step(f"Verify text: {expected_title}"):
-            title_locator = self.validate_locator_key(self.locators['text'], page_title)
-            self.ui_verifications.verify_text_in_element(title_locator, expected_title)
+        """Verify that the page title matches the expected title."""
+        title_locator = self.get_page_locator('text', page_title)
+        self.ui_verifications.verify_text_in_element(title_locator, expected_title)
 
+    @allure.step("Verifying zoom functionality by pressing: {page_name}")
     def verify_zoom(self, page_name):
-        """Verify that the image enlarges after pressing the zoom button."""
-        with allure.step(f"Verify image zoomed after pressing on {page_name}"):
-            button_locator = self.validate_locator_key(self.locators['buttons'], page_name)
-            self.ui_verifications.compare_image(button_locator)
+        """Verify that zoom functionality works by checking if the image enlarges."""
+        button_locator = self.get_page_locator('buttons', page_name)
+        self.ui_verifications.compare_image(button_locator)
 
+    @allure.step("Clicking on button: {button}")
     def click_on_button(self, button):
-        """Press on a button."""
-        with allure.step(f"Pressing on: {button} button"):
-            button_locator = self.validate_locator_key(self.locators['buttons'], button)
-            self.ui_actions.press(button_locator)
+        """Click a button identified by its name."""
+        button_locator = self.get_page_locator('buttons', button)
+        self.ui_actions.press(button_locator)
 
+    @allure.step("Pressing device back button")
     def press_on_back(self):
-        """Go back with device back button."""
-        with allure.step(f"Pressing on: back button"):
-            self.driver.back()
+        """Press the back button on the device."""
+        self.driver.back()
 
+    @allure.step("Verifying that image is displayed: {image}")
     def verify_image(self, image):
-        """Verify image appears on the screen."""
-        image_locator = self.validate_locator_key(self.locators['images'], image)
+        """Check that the given image is displayed on the screen."""
+        image_locator = self.get_page_locator('images', image)
         self.ui_verifications.is_element_displayed(image_locator)
 
+    @allure.step("Verifying app crash and recovery after pressing: {button}")
     def verify_app_crash(self, button, expected_package):
-        """Verify that the app crashed after pressing on crash button and reopened  ."""
+        """Verify the app crashes and recovers when pressing a specific button."""
         locator = self.locators['buttons'].get(button)
         self.ui_verifications.verify_app_crash_and_recovery(locator, expected_package)

@@ -1,18 +1,24 @@
 import logging
 import os
 import sys
-
 import allure
 import shutil
 import colorlog
 from base.files_path import log_file_path, allure_report_directory
-from configuration.config import ConfigReader
+from utilities.config import ConfigReader
 
 # Define date format
 date_format = ConfigReader.read_config("date", "logs_time_format")
 
+# Create a reusable logger at the top
+logger = None
+
 
 def custom_logger():
+    global logger
+    if logger:
+        return logger
+
     logger = logging.getLogger("App_Run_Test")
     logger.setLevel(logging.DEBUG)
 
@@ -46,46 +52,38 @@ def custom_logger():
     file_handler.setFormatter(file_formatter)
 
     # Add Handlers
-    logger.addHandler(console_handler)  # Console Output
-    logger.addHandler(file_handler)  # Log File Output
+    logger.addHandler(console_handler)
+    logger.addHandler(file_handler)
 
     return logger
 
 
-def allure_step_logs(text):
-    """Logs messages to Allure reports"""
-    with allure.step(text):  # Ensures timestamps in Allure logs
-        pass
-
-    # Append message to log file
-    with open(log_file_path, "a") as f:
-        f.write(f"{text}\n")
-
-
-# def attach_logs_to_allure():
-#     """Attach the log file to Allure reports"""
-#     try:
-#         if os.path.exists(log_file_path):
-#             with open(log_file_path, "r") as f:
-#                 allure.attach(f.read(), name="Test Logs", attachment_type=allure.attachment_type.TEXT)
-#         else:
-#             logging.warning(f"Log file not found: {log_file_path}")
-#     except Exception as e:
-#         logging.error(f"Failed to attach log file: {e}")
+def attach_logs_to_allure():
+    """Attach the log file to Allure reports"""
+    log = custom_logger()
+    try:
+        if os.path.exists(log_file_path):
+            with open(log_file_path, "r") as f:
+                allure.attach(f.read(), name="Test Logs", attachment_type=allure.attachment_type.TEXT)
+        else:
+            log.warning(f"Log file not found: {log_file_path}")
+    except Exception as e:
+        log.error(f"Failed to attach log file: {e}")
 
 
 def clear_allure_reports():
     """Clear Allure reports before test run"""
+    log = custom_logger()
     if os.path.exists(allure_report_directory):
         for filename in os.listdir(allure_report_directory):
             file_path = os.path.join(allure_report_directory, filename)
             try:
                 if os.path.isdir(file_path):
-                    shutil.rmtree(file_path)  # Remove directory
+                    shutil.rmtree(file_path)
                 else:
-                    os.remove(file_path)  # Remove file
+                    os.remove(file_path)
             except Exception as e:
-                logging.error(f"Failed to delete {file_path}: {e}")
-        logging.info(f"Allure reports folder has been cleared.")
+                log.error(f"Failed to delete {file_path}: {e}")
+        log.info("Allure reports folder has been cleared.")
     else:
-        logging.info(f"Allure reports folder '{allure_report_directory}' does not exist.")
+        log.info(f"Allure reports folder '{allure_report_directory}' does not exist.")
